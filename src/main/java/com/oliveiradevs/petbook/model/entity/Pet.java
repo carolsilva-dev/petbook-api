@@ -28,7 +28,7 @@ public class Pet {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "dono_id", nullable = false, unique = true)
+    @JoinColumn(name = "dono_id", nullable = false)
     private Usuario dono;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL, orphanRemoval = true)
