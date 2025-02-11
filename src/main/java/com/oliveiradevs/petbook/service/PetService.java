@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,6 +25,10 @@ public class PetService {
 
     public List<Pet> buscarPetPorNome(String nome) {
         return petRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
+    public Optional<Pet> buscarPetPeloID(UUID id) {
+        return petRepository.findById(id);
     }
 
     public Pet atualizarPet(UUID id, DadosCadastroPet dados) {

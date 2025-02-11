@@ -1,5 +1,6 @@
 package com.oliveiradevs.petbook.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
@@ -32,6 +33,7 @@ public class Postagem {
     @JoinColumn(name = "foto_id", nullable = false)
     private Foto foto;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
@@ -108,17 +110,14 @@ public class Postagem {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Postagem postagem = (Postagem) o;
-        return Objects.equals(id, postagem.id) &&
-                Objects.equals(titulo, postagem.titulo) &&
-                Objects.equals(descricao, postagem.descricao);
+        return Objects.equals(id, postagem.id) && Objects.equals(titulo, postagem.titulo) && Objects.equals(descricao, postagem.descricao) && Objects.equals(dataPostagem, postagem.dataPostagem) && Objects.equals(usuario, postagem.usuario) && Objects.equals(foto, postagem.foto) && Objects.equals(pet, postagem.pet);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, titulo, descricao);
+        return Objects.hash(id, titulo, descricao, dataPostagem, usuario, foto, pet);
     }
 
     @Override
@@ -128,6 +127,9 @@ public class Postagem {
                 ", titulo='" + titulo + '\'' +
                 ", descricao='" + descricao + '\'' +
                 ", dataPostagem=" + dataPostagem +
+                ", usuario=" + usuario +
+                ", foto=" + foto +
+                ", pet=" + pet +
                 '}';
     }
 }

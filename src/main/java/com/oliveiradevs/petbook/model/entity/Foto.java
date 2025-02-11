@@ -1,5 +1,6 @@
 package com.oliveiradevs.petbook.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.oliveiradevs.petbook.model.enums.TipoFoto;
 import jakarta.persistence.*;
@@ -25,10 +26,12 @@ public class Foto {
     @Column(nullable = false)
     private Boolean compartilhada;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "pet_id", nullable = false)
     private Pet pet;
 
+    @JsonIgnore
     @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -97,19 +100,23 @@ public class Foto {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Foto foto = (Foto) o;
-        return Objects.equals(id, foto.id) && Objects.equals(url, foto.url) && Objects.equals(pet, foto.pet) && Objects.equals(usuario, foto.usuario);
+        return Objects.equals(id, foto.id) && Objects.equals(url, foto.url) && tipo == foto.tipo && Objects.equals(compartilhada, foto.compartilhada) && Objects.equals(pet, foto.pet) && Objects.equals(usuario, foto.usuario);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, url, pet, usuario);
+        return Objects.hash(id, url, tipo, compartilhada, pet, usuario);
     }
 
     @Override
     public String toString() {
         return "Foto{" +
-                "url='" + url + '\'' +
-                ", tipo='" + tipo + '\'' +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", tipo=" + tipo +
+                ", compartilhada=" + compartilhada +
+                ", pet=" + pet +
+                ", usuario=" + usuario +
                 '}';
     }
 }

@@ -19,6 +19,12 @@ public class Pet {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = true)
+    private String apelido;
+
+    @Column(nullable = true)
+    private String raca;
+
     @Column(nullable = false)
     private Integer idade;
 
@@ -37,9 +43,11 @@ public class Pet {
 
     public Pet() {}
 
-    public Pet(UUID id, String nome, Integer idade, GereroPet genero, Usuario dono, List<Foto> fotos) {
+    public Pet(UUID id, String nome, String apelido, String raca, Integer idade, GereroPet genero, Usuario dono, List<Foto> fotos) {
         this.id = id;
         this.nome = nome;
+        this.apelido = apelido;
+        this.raca = raca;
         this.idade = idade;
         this.genero = genero;
         this.dono = dono;
@@ -48,6 +56,22 @@ public class Pet {
 
     public UUID getId() {
         return id;
+    }
+
+    public String getApelido() {
+        return apelido;
+    }
+
+    public void setApelido(String apelido) {
+        this.apelido = apelido;
+    }
+
+    public String getRaca() {
+        return raca;
+    }
+
+    public void setRaca(String raca) {
+        this.raca = raca;
     }
 
     public void setId(UUID id) {
@@ -98,19 +122,25 @@ public class Pet {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Pet pet = (Pet) o;
-        return Objects.equals(id, pet.id) && Objects.equals(dono, pet.dono);
+        return Objects.equals(id, pet.id) && Objects.equals(nome, pet.nome) && Objects.equals(apelido, pet.apelido) && Objects.equals(raca, pet.raca) && Objects.equals(idade, pet.idade) && genero == pet.genero && Objects.equals(dono, pet.dono) && Objects.equals(fotos, pet.fotos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, dono);
+        return Objects.hash(id, nome, apelido, raca, idade, genero, dono, fotos);
     }
 
     @Override
     public String toString() {
         return "Pet{" +
-                "nome='" + nome + '\'' +
-                ", id=" + id +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", apelido='" + apelido + '\'' +
+                ", raca='" + raca + '\'' +
+                ", idade=" + idade +
+                ", genero=" + genero +
+                ", dono=" + dono +
+                ", fotos=" + fotos +
                 '}';
     }
 }

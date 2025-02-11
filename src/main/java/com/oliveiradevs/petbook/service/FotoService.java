@@ -19,18 +19,16 @@ public class FotoService {
     public Foto adicionarFoto(Foto foto) {
         return fotoRepository.save(foto);
     }
-    public void excluirFoto(UUID id) {
-        Optional<Foto> foto = fotoRepository.findById(id);
-        if (foto.isPresent()) {
-            fotoRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Foto não encontrada!");
-        }
-    }
-    public List<Foto> listarFotos() {
-        return fotoRepository.findAll();
+
+    public Optional<Foto> buscarFotoPorId(UUID id) {
+        return fotoRepository.findById(id);
     }
     public List<Foto> buscarFotosPorPet(UUID petId) {
         return fotoRepository.findByPetId(petId);
     }
+
+    public void deletarFoto(UUID id) {
+        fotoRepository.deleteById(id);
+    }
+
 }

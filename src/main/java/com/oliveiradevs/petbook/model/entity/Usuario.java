@@ -73,18 +73,15 @@ public class Usuario {
     public void setSenha(String senha) {this.senha = senha;}
 
     @Override
-    public  boolean equals(Object o) {
-        if (this == o) return true;
+    public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return Objects.equals(id, usuario.id) &&
-               Objects.equals(email, usuario.email);
-
+        return Objects.equals(id, usuario.id) && Objects.equals(nome, usuario.nome) && Objects.equals(email, usuario.email) && Objects.equals(senha, usuario.senha) && Objects.equals(pets, usuario.pets) && Objects.equals(fotos, usuario.fotos);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, email);
+        return Objects.hash(id, nome, email, senha, pets, fotos);
     }
 
     @Override
@@ -93,7 +90,9 @@ public class Usuario {
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
+                ", senha='" + senha + '\'' +
+                ", pets=" + pets +
+                ", fotos=" + fotos +
                 '}';
     }
-
 }
