@@ -1,6 +1,7 @@
 package com.oliveiradevs.petbook.controller;
 
 import com.oliveiradevs.petbook.dto.DadosCadastroUsuario;
+import com.oliveiradevs.petbook.dto.LoginDto;
 import com.oliveiradevs.petbook.model.entity.Usuario;
 import com.oliveiradevs.petbook.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,17 @@ public class UsuarioController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
-    @GetMapping("/exists/{email}")
-    public ResponseEntity<Boolean> verificarUsuarioExistente(@PathVariable String email) {
-        boolean existe = usuarioService.usuarioExistente(email);
-        return ResponseEntity.ok(existe);
+    @PostMapping("/login")
+    public ResponseEntity<?> autenticar(@RequestBody LoginDto loginDTO) {
+        boolean autenticado = usuarioService.autenticarUsuario(loginDTO.getEmail(), loginDTO.getSenha());
+
+        if (autenticado) {
+            return ResponseEntity.ok("Usuário autenticado");
+        } else {
+            return ResponseEntity.status(401).body("Usuário não encontrado ou senha incorreta");
+        }
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<?> atualizarUsuario(@PathVariable UUID id, @RequestBody DadosCadastroUsuario dados) {
         try {
@@ -55,9 +62,12 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletarUsuario(@PathVariable UUID id) {
         usuarioService.deletarUsuario(id);
         return ResponseEntity.ok("Usuário deletado com sucesso!");
     }
 }
+
+

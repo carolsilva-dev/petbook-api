@@ -26,13 +26,20 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
-    public boolean usuarioExistente(String email) {
-        return usuarioRepository.existsByEmail(email);
+    public boolean autenticarUsuario(String email, String senha) {
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
+
+        if (usuarioOptional.isPresent()) {
+            Usuario usuario = usuarioOptional.get();
+            return usuario.getSenha().equals(senha);
+        }
+        return false;
     }
 
     public Optional<Usuario> buscarPorId(UUID id) {
         return usuarioRepository.findById(id);
     }
+
     public Usuario atualizarUsuario(UUID id, DadosCadastroUsuario dados) {
         return usuarioRepository.findById(id).map(usuario -> {
             usuario.setNome(dados.getNome() != null ? dados.getNome() : usuario.getNome());
