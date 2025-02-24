@@ -1,5 +1,6 @@
 package com.oliveiradevs.petbook.controller;
 
+import com.oliveiradevs.petbook.config.Jwt;
 import com.oliveiradevs.petbook.dto.DadosCadastroUsuario;
 import com.oliveiradevs.petbook.dto.LoginDto;
 import com.oliveiradevs.petbook.model.entity.Usuario;
@@ -9,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,7 +50,13 @@ public class UsuarioController {
         boolean autenticado = usuarioService.autenticarUsuario(loginDTO.getEmail(), loginDTO.getSenha());
 
         if (autenticado) {
-            return ResponseEntity.ok("Usuário autenticado");
+            Jwt jwtUtil = new Jwt();
+            jwtUtil.init(); // 🔥 Necessário para inicializar a chave secreta!
+
+            String token = jwtUtil.generateToken(loginDTO.getEmail());
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(401).body("Usuário não encontrado ou senha incorreta");
         }

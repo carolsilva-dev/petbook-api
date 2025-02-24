@@ -2,6 +2,8 @@ package com.oliveiradevs.petbook.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +22,9 @@ public class Jwt {
 
     @PostConstruct
     public void init() {
-//        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-//        this.secretKey = new SecretKeySpec(keyBytes, "HmacSHA256");
-
-        this.secretKey = Jwts.SIG.HS256.key().build();
+        // ✅ Converte a string para bytes e gera uma SecretKey compatível
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String extractUsername(String token) {
