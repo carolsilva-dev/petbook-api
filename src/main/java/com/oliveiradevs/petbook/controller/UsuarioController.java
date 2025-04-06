@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+
 import java.util.UUID;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("usuarios")
 public class UsuarioController {
@@ -51,7 +54,7 @@ public class UsuarioController {
 
         if (autenticado) {
             Jwt jwtUtil = new Jwt();
-            jwtUtil.init(); // 🔥 Necessário para inicializar a chave secreta!
+            jwtUtil.init();
 
             String token = jwtUtil.generateToken(loginDTO.getEmail());
             Map<String, String> response = new HashMap<>();

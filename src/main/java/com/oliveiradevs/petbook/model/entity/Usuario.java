@@ -11,7 +11,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "usuario", schema = "public")
-public class Usuario {
+public class
+Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

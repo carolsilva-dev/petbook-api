@@ -4,6 +4,7 @@ import com.oliveiradevs.petbook.dto.DadosCadastroUsuario;
 import com.oliveiradevs.petbook.model.entity.Usuario;
 import com.oliveiradevs.petbook.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -12,13 +13,17 @@ import java.util.UUID;
 @Service
 public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Usuario criarUsuario(Usuario usuario) {
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
     }
 
@@ -28,10 +33,9 @@ public class UsuarioService {
 
     public boolean autenticarUsuario(String email, String senha) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
-
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
-            return usuario.getSenha().equals(senha);
+            return passwordEncoder.matches(senha, usuario.getSenha());
         }
         return false;
     }
@@ -44,10 +48,17 @@ public class UsuarioService {
         return usuarioRepository.findById(id).map(usuario -> {
             usuario.setNome(dados.getNome() != null ? dados.getNome() : usuario.getNome());
             usuario.setEmail(dados.getEmail() != null ? dados.getEmail() : usuario.getEmail());
-            usuario.setSenha(dados.getSenha() != null ? dados.getSenha() : usuario.getSenha());
+            if (dados.getSenha() != null) {
+                String senhaCriptografada = passwordEncoder.encode(dados.getSenha());
+                usuario.setSenha(senhaCriptografada);
+            }
+
+
+
             return usuarioRepository.save(usuario);
         }).orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
     }
+
     public void deletarUsuario(UUID id) {
         if (!usuarioRepository.existsById(id)) {
             throw new RuntimeException("Usuário não encontrado!");

@@ -3,7 +3,7 @@ package com.oliveiradevs.petbook.config;
 public class JwtTest {
     public static void main(String[] args) {
         Jwt jwtUtil = new Jwt();
-        jwtUtil.init(); // 🔥 Necessário para inicializar a chave secreta!
+        jwtUtil.init();
 
         String token = jwtUtil.generateToken("testeUser");
         System.out.println("Token gerado: " + token);
