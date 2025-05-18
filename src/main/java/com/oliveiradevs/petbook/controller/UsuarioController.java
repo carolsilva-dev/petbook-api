@@ -10,12 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
-
-import java.util.UUID;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -48,18 +43,12 @@ public class UsuarioController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
+
     @PostMapping("/login")
     public ResponseEntity<?> autenticar(@RequestBody LoginDto loginDTO) {
-        boolean autenticado = usuarioService.autenticarUsuario(loginDTO.getEmail(), loginDTO.getSenha());
-
-        if (autenticado) {
-            Jwt jwtUtil = new Jwt();
-            jwtUtil.init();
-
-            String token = jwtUtil.generateToken(loginDTO.getEmail());
-            Map<String, String> response = new HashMap<>();
-            response.put("token", token);
-            return ResponseEntity.ok(response);
+        String token = usuarioService.autenticarUsuario(loginDTO.getEmail(), loginDTO.getSenha());
+        if ( Objects.nonNull( token ) ) {
+            return ResponseEntity.ok(usuarioService.geraRetornoAutenticado(loginDTO, token));
         } else {
             return ResponseEntity.status(401).body("Usuário não encontrado ou senha incorreta");
         }

@@ -1,12 +1,16 @@
 package com.oliveiradevs.petbook.service;
 
+import com.oliveiradevs.petbook.config.Jwt;
 import com.oliveiradevs.petbook.dto.DadosCadastroUsuario;
+import com.oliveiradevs.petbook.dto.LoginDto;
 import com.oliveiradevs.petbook.model.entity.Usuario;
 import com.oliveiradevs.petbook.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,13 +35,26 @@ public class UsuarioService {
         return usuarioRepository.findByEmail(email);
     }
 
-    public boolean autenticarUsuario(String email, String senha) {
+    public Map<String, String> geraRetornoAutenticado(LoginDto loginDto, String token) {
+        Map<String, String> response = new HashMap<>();
+        response.put("user", loginDto.getEmail());
+        response.put("expirationDate", String.valueOf(Jwt.generateExpiration()));
+        response.put("token", token);
+        return response;
+    }
+
+    public String autenticarUsuario(String email, String senha) {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
         if (usuarioOptional.isPresent()) {
             Usuario usuario = usuarioOptional.get();
-            return passwordEncoder.matches(senha, usuario.getSenha());
+            boolean usuarioValido = passwordEncoder.matches(senha, usuario.getSenha());
+            if ( usuarioValido ) {
+                Jwt jwtUtil = new Jwt();
+                jwtUtil.init();
+                return jwtUtil.generateToken(email);
+            }
         }
-        return false;
+        return null;
     }
 
     public Optional<Usuario> buscarPorId(UUID id) {
@@ -52,7 +69,6 @@ public class UsuarioService {
                 String senhaCriptografada = passwordEncoder.encode(dados.getSenha());
                 usuario.setSenha(senhaCriptografada);
             }
-
 
 
             return usuarioRepository.save(usuario);

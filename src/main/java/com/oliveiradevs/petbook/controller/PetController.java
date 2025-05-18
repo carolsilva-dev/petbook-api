@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/pets")
 public class PetController {
@@ -64,5 +64,10 @@ public class PetController {
     public ResponseEntity<String> deletarPet(@PathVariable UUID id) {
         petService.deletarPet(id);
         return ResponseEntity.ok("Pet deletado com sucesso!");
+    }
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<List<Pet>> listarPetsPorUsuario(@PathVariable UUID usuarioId) {
+        List<Pet> pets = petService.buscarPetsPorUsuarioId(usuarioId);
+        return ResponseEntity.ok(pets);
     }
 }

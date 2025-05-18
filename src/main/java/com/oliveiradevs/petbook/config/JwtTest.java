@@ -9,6 +9,7 @@ public class JwtTest {
         System.out.println("Token gerado: " + token);
 
         boolean isValid = jwtUtil.validateToken(token, "testeUser");
+
         System.out.println("Token válido? " + isValid);
 
         String username = jwtUtil.extractUsername(token);

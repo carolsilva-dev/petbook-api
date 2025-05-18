@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -18,6 +21,13 @@ public class Jwt {
     private SecretKey secretKey;
 
     private static final String SECRET = "uV7jJ9n3xqL2rZ8pQ4sT1vW6yD5mN0aFA2B3C4D5E6G7H8I9J0KLMNOPQRSTUV";
+
+    public static long generateExpiration () {
+        ZoneId zonaBrasilia = ZoneId.of("America/Sao_Paulo");
+        ZonedDateTime umaHoraDepois =
+                ZonedDateTime.now(zonaBrasilia).plus(1, ChronoUnit.HOURS);
+        return umaHoraDepois.toInstant().toEpochMilli();
+    }
 
     @PostConstruct
     public void init() {
@@ -54,7 +64,7 @@ public class Jwt {
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hora
+                .expiration(new Date(generateExpiration())) // 1 hora
                 .signWith(secretKey)
                 .compact();
     }

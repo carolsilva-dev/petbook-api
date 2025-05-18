@@ -46,4 +46,9 @@ public class PetService {
         petRepository.deleteById(id);
     }
 
+    public List<Pet> buscarPetsPorUsuarioId(UUID usuarioId) {
+        return petRepository.findByDonoId(usuarioId);
+    }
+
+
 }
